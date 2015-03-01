@@ -4,8 +4,16 @@ Rhythm
 OOP with tradicional rhythms
 Aris Bezas 121115
 
-Rhythm.play(1,230);  //Rhythm.play(rhythmID, bpm);
+Rhythm.play(1,160);  //Rhythm.play(rhythmID, bpm);
+~durPPatt.source.asStream.next
+~dum = ~cM
+Rhythm.mute
+~rhythm.
+~bufnumPPatt.source.asStream.next.next()
+Rhythm.changeBpm(200)
+Rhythm.mute
 ~instrumentPPatt.source = Pseq(\simplePlayBuf, inf);
+~rhythm.fin
 */
 
 Rhythm {
@@ -16,7 +24,8 @@ Rhythm {
 				//ratio= [   0,    1,    2,     3,     4,       5,     6,      7,     8,     9,     10,    11 ,          12,  13]
 				//ratio= [ 2/4,  4/4,  8/8, 16/16,  33/32,    3/4,   6/8,    7/8,   9/8,   10/8   12/8,   18/8(9/4),  18/16, 7/4]
 				~ratio = [1/60, 1/60, 1/30,  1/15,   2/15, 0.4/18,  1/30,   1/15, 0.1/3,   1/30,   1/30, 1/60,      0.1/1.5,   1];
-				~bpm = 60;
+				~bpm = 100;
+				~rhythmID = 0;
 				this.loadTheBuffers;
 				this.defineNotesFreqs;
 				this.sendTheSynths;
@@ -47,6 +56,7 @@ Rhythm {
 	}
 	*start{
 		~rhythm.play;
+		~meterCounter = 0;
 		//~countPPatt.next(());
 	}
 	*stop {~rhythm.stop;~rhythm = 0}//Doesn't work
@@ -54,25 +64,33 @@ Rhythm {
 
 	*loadTheBuffers	{
 
-		~bass_drum = Buffer.read(Server.default, "/Users/ari/Media/sounds/percusion/bass_Drum_Single_Kick.aiff");
-		~gonga = Buffer.read(Server.default, "/Users/ari/Media/sounds/percusion/gonga_single_hit.aiff");
-		~bell = Buffer.read(Server.default, "/Users/ari/Media/sounds/percusion/agogo_bell.aiff");
-		~tambourine = Buffer.read(Server.default, "/Users/ari/Media/sounds/percusion/tambourine.aiff");
-		~motoLoop = Buffer.read(Server.default, "/Users/ari/Media/sounds/loops/MotownDrummer08.aif");
-		~bass_tambourine = Buffer.read(Server.default, "/Users/ari/Media/sounds/percusion/bass_tambourine.aiff");
+		~bass_drum = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/bass_Drum_Single_Kick.aiff");
+		~gonga = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/gonga_single_hit.aiff");
+		~bell = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/agogo_bell.aiff");
+		~tambourine = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/tambourine.aiff");
+		~darbukaDum = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/36607__schalkalwis__darbuka-1-003.aiff");
+		~darbukaTe = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/36611__schalkalwis__darbuka-2-002.aiff");
 
+		~cM = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/guitar/CM.aiff");
+		~dM = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/guitar/DM.aiff");
 
+		~ntefiDum = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/ntefiDum.aiff");
+		~ntefiTe = Buffer.read(Server.default, Platform.userExtensionDir +/+ "Rhythm/samples/ntefiTe.aiff");
 		//default
+		//
 		~dum = ~bass_drum;
 		~te  = ~gonga;
+		// ~dum = ~ntefiDum;
+		// ~te  = ~ntefiTe;
+
 	}
 	*sendTheSynths	{
 		//Synth from Understanding Streams, Patterns and Events - Part 3
 		SynthDef( \mridangam, {
 			| t_amp = 1, midiNote = 60, bufnum|
 			var out;
-			if (bufnum == ~dum, {midiNote = 60;"dum".postln}, {"no dum".postln});
-			if (bufnum == ~te, {midiNote = 600;"dum".postln}, {"no dum".postln});
+			// if (bufnum == ~dum, {midiNote = 60;"dum".postln}, {"no dum".postln});
+			// if (bufnum == ~te, {midiNote = 600;"dum".postln}, {"no dum".postln});
 			out = Resonz.ar(
 				WhiteNoise.ar(70) * Decay2.kr( t_amp, 0.002, 0.1 ),
 				midiNote.midicps,
@@ -155,7 +173,9 @@ Rhythm {
 			// \count,          ~countPPatt,
 		);
 	}
-
+	*changeBpm { |bpm=100|
+		~bpm = bpm;
+	}
 	//Rhythms
 	*changeRhythm { |rhythmNum=1, bpm=100|
 		case
@@ -164,7 +184,6 @@ Rhythm {
 			~durPPatt.source = Pseq([1, 1, 1, 1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, ~te,  ~dum, ~te], inf);
 			~ampPPatt.source =    Pseq([   1,   1,     1,   1], inf);
-			// ~countPPatt.source =    Pseq([   1,   1,     1,   1], inf);
 		}
 		{rhythmNum == 2} {
 			~bpm = ~ratio[5]*bpm;
@@ -197,31 +216,31 @@ Rhythm {
 			~ampPPatt.source =    Pseq([1,    0,   1,    1,    1,   0,   1,    1], inf);
 		}
 		{rhythmNum == 7} {
-			~bpm = ~ratio[0]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te,  ~te, ~te,   0,  ~te, 0], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,    1,   1,   0,   1,  0], inf);
 		}
 		{rhythmNum == 8.1} {
-			~bpm = ~ratio[2]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, 0,  ~te, ~te,   0,  ~te, 0], inf);
 			~ampPPatt.source =    Pseq([1,    0, 0,    1,   1,   0,   1,  0], inf);
 		}
 		{rhythmNum == 8.2} {
-			~bpm = ~ratio[2]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, 0,  ~te, ~te,  ~te,  ~te, ~te], inf);
 			~ampPPatt.source =    Pseq([1,    0, 0,    1,   1,    1,   1,    1], inf);
 		}
 		{rhythmNum == 9.1} {
-			~bpm = ~ratio[5]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, 0,  ~te, ~te,   0,  ~te, 0,~dum, 0,~te, 0], inf);
 			~ampPPatt.source =    Pseq([1,    0, 0,    1,   1,   0,   1,  0,  1, 0,  1, 0], inf);
 		}
 		{rhythmNum == 9.2} {
-			~bpm = ~ratio[5]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, 0,~te, ~te,   0,  ~te, 0,~te, ~te,~te, ~te], inf);
 			~ampPPatt.source =    Pseq([1,    0, 0,  1,   1,   0,   1,  0,  1,   1,  1,   1], inf);
@@ -281,31 +300,31 @@ Rhythm {
 			~ampPPatt.source =    Pseq([1,    0,   1,   1,    1,  0,   1,  0, 0, 0,   1, 0,  1,    1,   1, 0], inf);
 		}
 		{rhythmNum == 15.1} {
-			~bpm = ~ratio[2]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, 0, ~te, 0,  0, ~te,  0], inf);
 			~ampPPatt.source =    Pseq([1,    0, 0,   1, 0,  0,   1,  0], inf);
 		}
 		{rhythmNum == 15.2} {
-			~bpm = ~ratio[2]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~te, 0,  ~te, ~te,  0], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,   1, 0,    1,   1,  0], inf);
 		}
 		{rhythmNum == 15.3} {
-			~bpm = ~ratio[2]*bpm;
+			~bpm = ~ratio[3]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~te, 0,  ~te, ~te, ~te], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,   1, 0,    1,   1,   1], inf);
 		}
 		{rhythmNum == 16} {
-			~bpm = ~ratio[13]*bpm;
+			~bpm = ~ratio[7]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~dum, 0,  ~te,  0], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,   1,  0,    1,  0], inf);
 		}
 		{rhythmNum == 17} {
-			~bpm = ~ratio[13]*bpm;
+			~bpm = ~ratio[7]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1], inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, ~te, ~te, ~dum, 0,  ~te,  0], inf);
 			~ampPPatt.source =    Pseq([1,      1,   1,   1,  0,    1,  0], inf);
@@ -372,6 +391,18 @@ Rhythm {
 			~ampPPatt.source = Pseq([     1,  0, 1,    1,  1,    1,  1,  0,  1,   1,   1,   1,   1,   1], inf);
 		}
 
+		{rhythmNum == 28.1} {
+			~bpm = ~ratio[7]*bpm;
+			~durPPatt.source = Pseq(Array.fill(16,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0,~te, 0,~te, 0,~te, 0,~dum,0,~te, 0,~te, 0, ~te, ~te], inf);
+			~ampPPatt.source = Pseq([     1,  0, 1,  0,  1, 0, 1,  0, 1, 0, 1,  0,  1,  0,  1,   1], inf);
+		}
+		{rhythmNum == 28.2} {
+			~bpm = ~ratio[7]*bpm;
+			~durPPatt.source = Pseq(Array.fill(8,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, ~te,~te,~te, ~dum, 0,~te, 0], inf);
+			~ampPPatt.source = Pseq([     1,    1,  1, 1,    1,  0,  1,  0], inf);
+		}
 		//  FILL THE GAP
 
 		{rhythmNum == 31} {
@@ -380,7 +411,7 @@ Rhythm {
 			~bufnumPPatt.source = Pseq([~dum, 0,~te, ~te, ~dum, 0,~te, ~te, ~te], inf);
 			~ampPPatt.source = Pseq([     1,  0, 1,    1,   1,  0,  1,  1,   1], inf);
 		}
-		{rhythmNum == 32} {
+		{rhythmNum == 32.1} {
 			~bpm = ~ratio[7]*bpm;
 			~durPPatt.source = Pseq(Array.fill(7,1), inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0,~te, ~te, ~te, ~te, ~te], inf);
@@ -392,14 +423,27 @@ Rhythm {
 			~bufnumPPatt.source = Pseq([~dum, 0,~te, 0, ~dum, 0, ~te], inf);
 			~ampPPatt.source = Pseq([     1,  0, 1,  0,   1,  0,   1], inf);
 		}
-		{rhythmNum == 33} {
+		{rhythmNum == 32.3} {
 			~bpm = ~ratio[7]*bpm;
 			~durPPatt.source = Pseq(Array.fill(7,1), inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0,~te, 0, ~dum, 0, ~te], inf);
 			~ampPPatt.source = Pseq([     1,  0, 1,  0,   1,  0,   1], inf);
 		}
-
 		//  FILL THE GAP
+		{rhythmNum == 35} {
+			~bpm = ~ratio[7]*bpm;
+			~durPPatt.source = Pseq(Array.fill(6,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0,~te,~te,~te,~te], inf);
+			~ampPPatt.source = Pseq([     1,  0, 1,  1,  1,  1], inf);
+		}
+		//  FILL THE GAP
+
+		{rhythmNum == 39.1} {
+			~bpm = ~ratio[6]*bpm;
+			~durPPatt.source = Pseq(Array.fill(12,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0,~te, ~te, ~te, 0, ~dum, 0, ~te, 0,~te, 0 ] , inf);
+			~ampPPatt.source = Pseq([      1, 0,  1,  1,    1,  0,  1,  0,   1, 0, 1,  1], inf);
+		}
 
 		{rhythmNum == 40} {
 			~bpm = ~ratio[7]*bpm;
@@ -407,13 +451,37 @@ Rhythm {
 			~bufnumPPatt.source = Pseq([~dum, 0,~te, ~te, ~dum, 0, ~te, 0, ~te, 0 ] , inf);
 			~ampPPatt.source = Pseq([      1, 0,  1,  1,    1,  0,  1,  0,   1, 0], inf);
 		}
+		{rhythmNum == 41.1} {
+			~durPPatt.source = Pseq(Array.fill(5,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0,~te, ~te, ~te ] , inf);
+			~ampPPatt.source = Pseq([      1, 0,  1,  1,    1], inf);
+		}
+		{rhythmNum == 41.2} {
+			~durPPatt.source = Pseq(Array.fill(5,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, ~te,~te, ~te, ~te ] , inf);
+			~ampPPatt.source = Pseq([      1,  1,  1,  1,    1], inf);
+		}
+
+		{rhythmNum == 44} {
+			~bpm = ~ratio[11]*bpm;
+			~durPPatt.source = Pseq(Array.fill(18,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~te, ~dum, 0,~te,  ~te, ~dum,  0, ~te, ~te, ~dum, 0, ~te, 0, ~te, 0], inf);
+			~ampPPatt.source =    Pseq([1,    0,   1,   1,   1,  0,  1,   1,   1,   0,    1,  1,   1,  0,   1, 0,   1, 0], inf);
+		}
 
 		{rhythmNum == 45} {
 			~bpm = ~ratio[11]*bpm;
-			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], inf)/~bpm;
+			~durPPatt.source = Pseq(Array.fill(18,1), inf)/~bpm;
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~te, ~dum, 0,~te,  0, ~dum,  0, ~te, ~te, ~dum, 0, ~te, 0, ~te, 0], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,   1,   1,  0,  1,  0,   1,   0,    1,  1,   1,  0,   1, 0,   1, 0], inf);
 		}
+		{rhythmNum == 46} {
+			~bpm = ~ratio[11]*bpm;
+			~durPPatt.source = Pseq(Array.fill(18,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, ~te, 0, ~te, ~dum,  0, ~te, 0, ~dum, ~te, 0, ~te, ~dum, 0, ~te, 0, ~te, 0], inf);
+			~ampPPatt.source =    Pseq([1,    1,   0,   1,   1,   0,   1, 0,   1,    1, 0,   1, 1,    0, 1,   0,   1, 0], inf);
+		}
+
 		{rhythmNum == 47} {
 			~bpm = ~ratio[11]*bpm;
 			~durPPatt.source = Pseq([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], inf)/~bpm;
