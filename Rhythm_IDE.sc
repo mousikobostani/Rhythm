@@ -11,9 +11,10 @@ a.volume_(-20);
 */
 
 Rhythm_IDE {
-	classvar w,but00,but01,v,b1,b2,a1,a2,ww;
+	classvar w,but00,but01,but02,v,b1,b2,b3,a1,a2,a3,ww;
 	*create	{
 		w = Window.new("Παραδοσιακοί Ρυθμοί - Το Μουσικό Μποστάνι", Rect(100,100,700,430));
+
 		a1 = StaticText(w, Rect(300, 2, 130, 40));
 		a1.string = "Ταχύτητα Ρυθμού:";
 		b1 = NumberBox(w, Rect(430, 12, 45, 20));
@@ -28,7 +29,6 @@ Rhythm_IDE {
 		b2.step = 1;
 		b2.action = {~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); };
 
-
 		but01 = Button(w, Rect(490,11,160,48)).states_([
 			["Παίξε",Color.white,Color.black],
 			["Σίγαση",Color.black,Color.white]
@@ -37,6 +37,15 @@ Rhythm_IDE {
 			{ ~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); },
 			{ Rhythm.mute; }
 		)};
+
+/*		but02 = Button(w, Rect(490,61,160,48)).states_([
+			["Ντέφι",Color.white,Color.black],
+			["Κονγκας",Color.black,Color.white]
+		]);
+		but02.action = { if ( but01.value.asBoolean,
+			{ ~dum = ~bass_drum;~te  = ~gonga;~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value);},
+			{ ~dum = ~ntefiDum; ~te  = ~ntefiTe;~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); */
+
 
 		v = ListView(w,Rect(10,10,250,400))
 		.items_([
@@ -70,7 +79,8 @@ Rhythm_IDE {
 			"Ανάποδος καρσιλαμάς 9/8 (58.1~58.2)",
 			"Πεταχτός καρσιλαμάς 9/8 (59.1~59.2)",
 			"Τσιφτετέλι (63~66)",
-			"Αράβικο Τσιφτετέλι (70)"
+			"Αράβικο Τσιφτετέλι (70)",
+			"Μπολερό (73)"
 		])
 		.action_({arg v;
 			v.value.switch(
@@ -104,7 +114,8 @@ Rhythm_IDE {
 				27, {~rhythmID = 58.1; Rhythm.play(~rhythmID,b1.value); b2.value = 58.1; but01.value=1;},
 				28, {~rhythmID = 59.1; Rhythm.play(~rhythmID,b1.value); b2.value = 59.1; but01.value=1;},
 				29, {~rhythmID = 63;   Rhythm.play(~rhythmID,b1.value); b2.value = 63;   but01.value=1;},
-				30, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;}
+				30, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},
+				31, {~rhythmID = 73;   Rhythm.play(~rhythmID,60);       b2.value = 73;   but01.value=1;}
 			)
 		});
 		w.front;

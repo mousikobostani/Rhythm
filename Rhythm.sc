@@ -1,10 +1,9 @@
 /*
-metropolis movie
 Rhythm
 OOP with tradicional rhythms
 Aris Bezas 121115
 
-Rhythm.play(1,160);  //Rhythm.play(rhythmID, bpm);
+Rhythm.play(501,85);  //Rhythm.play(rhythmID, bpm);
 ~durPPatt.source.asStream.next
 ~dum = ~cM
 Rhythm.mute
@@ -14,6 +13,7 @@ Rhythm.changeBpm(200)
 Rhythm.mute
 ~instrumentPPatt.source = Pseq(\simplePlayBuf, inf);
 ~rhythm.fin
+Rhythm_IDE.create
 */
 
 Rhythm {
@@ -47,11 +47,11 @@ Rhythm {
 				this.start;
 				this.changeRhythm(rhythmID, bpm);
 				~rhythmNum = 1;
-			},
-			{
+			},{
 				"Rhythm is Playing, so just change the rhythm".postln;
 				this.changeRhythm(rhythmID, bpm);
 			}
+
 		)
 	}
 	*start{
@@ -87,7 +87,7 @@ Rhythm {
 	*sendTheSynths	{
 		//Synth from Understanding Streams, Patterns and Events - Part 3
 		SynthDef( \mridangam, {
-			| t_amp = 1, midiNote = 60, bufnum|
+			| t_amp = 2, midiNote = 60, bufnum|
 			var out;
 			// if (bufnum == ~dum, {midiNote = 60;"dum".postln}, {"no dum".postln});
 			// if (bufnum == ~te, {midiNote = 600;"dum".postln}, {"no dum".postln});
@@ -103,7 +103,7 @@ Rhythm {
 		}).store;
 
 		//PlayBuf
-		SynthDef(\simplePlayBuf, { | out, freq = 440, amp = 1, bufnum = 10, pan = 0, gate = 1, loop = 0 |
+		SynthDef(\simplePlayBuf, { | out, freq = 440, amp = 2, bufnum = 10, pan = 0, gate = 1, loop = 0 |
 			Out.ar(0, Pan2.ar(PlayBuf.ar(1,bufnum:bufnum,doneAction:
 				2, loop: loop), 0, amp));
 		}).store;
@@ -605,6 +605,37 @@ Rhythm {
 			~bufnumPPatt.source = Pseq([~dum, 0, ~dum, 0, ~te, ~te, ~te, 0, ~dum,   0, ~te, ~te,   ~te, 0, ~te, ~te], inf);
 			~ampPPatt.source =    Pseq([1,    0,   1,  0,   1,   1,   1, 0,    1,   0,   1,   1,     1, 0,   1,   1], inf);
 		}
+		{rhythmNum == 73} {
+			~bpm = ~ratio[12]*bpm;
+			~durPPatt.source = Pseq(Array.fill(16,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0, ~te,~te, ~te, 0, ~te,   0, ~dum, 0, ~te, 0, ~dum, 0, ~te, 0], inf);
+			~ampPPatt.source =    Pseq([ 1,   0,   1,  1,   1, 0,   1,   0,   1,  0,  1,  0,   1,  0,   1,  0], inf);
+		}
+
+		// Gankino Horo Rhythm.play(500,100);
+		{rhythmNum == 500} {
+			~bpm = ~ratio[2]*bpm;
+			~durPPatt.source = Pseq(Array.fill(13,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, 0, ~dum, 0, ~dum, 0, ~dum, ~te, ~te,  ~dum,   0, ~dum, 0], inf);
+			~ampPPatt.source =    Pseq([1,    0,   1,  0,   1,  0,   1,   1,    1,     1,   0,    1, 0], inf);
+		}
+		// Curcuna
+		{rhythmNum == 501} {
+			~bpm = ~ratio[2]*bpm;
+			~durPPatt.source = Pseq(Array.fill(10,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, ~te, ~te, ~dum, ~te, ~dum, ~te, ~dum, ~te, ~te], inf);
+			~ampPPatt.source =    Pseq([1,     1,   1,    1,    1,   1,   1,  1,     1,   1], inf);
+		}
+
+		//Τριανταφυλλιας
+		{rhythmNum == 173} {
+			~bpm = ~ratio[12]*bpm;
+			~durPPatt.source = Pseq(Array.fill(9,1), inf)/~bpm;
+			~bufnumPPatt.source = Pseq([~dum, ~te,~dum, ~te, ~dum, ~te,  ~dum, ~te, ~te ], inf);
+			~ampPPatt.source =    Pseq([ 1,    1,  1,     1,    1,   1,   1,    1,   1  ], inf);
+		}
+
+
 	}
 }
 
