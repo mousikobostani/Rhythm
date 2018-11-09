@@ -573,6 +573,8 @@ Rhythm {
 			~ampPPatt.source =    Pseq([1,    0,   1,   1,   1, 0,  1,   1,    1,  0,  1,   1,     1, 0,  1,    1,   1,   1], inf);
 		}
 
+		// Aksak Semai
+		
 		// TODO
 		// DONE
 		{rhythmNum == 63} {
