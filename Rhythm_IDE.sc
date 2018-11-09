@@ -80,7 +80,8 @@ Rhythm_IDE {
 			"29. Πεταχτός καρσιλαμάς 9/8 (59.1~59.2)",
 			"30. Τσιφτετέλι (63~66)",
 			"31. Αράβικο Τσιφτετέλι (70)",
-			"32. Μπολερό (73)"
+			"32. Μπολερό (73)",
+			"100. Askak Semai [id: 100]"			
 		])
 		.action_({arg v;
 			v.value.switch(
@@ -115,7 +116,9 @@ Rhythm_IDE {
 				28, {~rhythmID = 59.1; Rhythm.play(~rhythmID,b1.value); b2.value = 59.1; but01.value=1;},
 				29, {~rhythmID = 63;   Rhythm.play(~rhythmID,b1.value); b2.value = 63;   but01.value=1;},
 				30, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},
-				31, {~rhythmID = 73;   Rhythm.play(~rhythmID,60);       b2.value = 73;   but01.value=1;}
+				31, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},
+				32, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},			
+				33, {~rhythmID = 100;   Rhythm.play(~rhythmID,100);       b2.value = 100;   but01.value=1;}
 			)
 		});
 		w.front;
