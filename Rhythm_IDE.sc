@@ -13,23 +13,23 @@ a.volume_(-20);
 Rhythm_IDE {
 	classvar w,but00,but01,but02,v,b1,b2,b3,a1,a2,a3,ww;
 	*create	{
-		w = Window.new("Παραδοσιακοί Ρυθμοί - Το Μουσικό Μποστάνι", Rect(100,100,700,630));
+		w = Window.new("Παραδοσιακοί Ρυθμοί - Το Μουσικό Μποστάνι", Rect(100,100,800,630));
 
-		a1 = StaticText(w, Rect(400, 2, 130, 40));
+		a1 = StaticText(w, Rect(470, 2, 130, 40));
 		a1.string = "Ταχύτητα Ρυθμού:";
-		b1 = NumberBox(w, Rect(530, 12, 45, 20));
+		b1 = NumberBox(w, Rect(610, 12, 45, 20));
 		b1.value = 100;
 		b1.step = 1;
 		b1.action = {~bpm=b1.value;Rhythm.play(~rhythmID,~bpm); };
 
-		a2 = StaticText(w, Rect(400, 30, 130, 40));
+		a2 = StaticText(w, Rect(470, 30, 130, 40));
 		a2.string = "Ταυτότητα Ρυθμού:";
-		b2 = NumberBox(w, Rect(530, 40, 45, 20));
+		b2 = NumberBox(w, Rect(610, 40, 45, 20));
 		b2.value = 1;
 		b2.step = 1;
 		b2.action = {~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); };
 
-		but01 = Button(w, Rect(590,11,100,48)).states_([
+		but01 = Button(w, Rect(680,11,100,48)).states_([
 			["Παίξε",Color.white,Color.black],
 			["Σίγαση",Color.black,Color.white]
 		]);
@@ -37,6 +37,13 @@ Rhythm_IDE {
 			{ ~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); },
 			{ Rhythm.mute; }
 		)};
+		
+		but02 = Button(w, Rect(680,61,100,48)).states_([
+			["Start again",Color.white,Color.black]
+		]);
+		but02.action = {
+			{ Rhythm.mute; }
+		};
 
 /*		but02 = Button(w, Rect(490,61,160,48)).states_([
 			["Ντέφι",Color.white,Color.black],
@@ -47,15 +54,15 @@ Rhythm_IDE {
 			{ ~dum = ~ntefiDum; ~te  = ~ntefiTe;~rhythmID = b2.value;Rhythm.play(~rhythmID,b1.value); */
 
 
-		v = ListView(w,Rect(10,10,350,600))
+		v = ListView(w,Rect(10,10,460,600))
 		.items_([
-			"1. Χασάπικο(1)",
-			"2. Συρτό στα τρία(2)",
-			"3. Πωγωνίσιο - Μπαγιό(3~4)",
-			"4. Χασαποσέρβικο(5~6)",
-			"5. Σούστα (7)",
-			"6. Μπάλλος (8.1~8.2)",
-			"7. Τσάμικο (9.1~9.2)",
+			"1. Χασάπικο \t \t \t [id:1]",
+			"2. Συρτό στα τρία \t \t \t [id: 2]",
+			"3. Πωγωνίσιο - Μπαγιό \t \t \t [id: 3~4]",
+			"4. Χασαποσέρβικο \t \t \t [id: 5~6]",
+			"5. Σούστα \t \t \t \t [id: 7]",
+			"6. Μπάλλος \t \t \t [id: 8.1~8.2]",
+			"7. Τσάμικο \t \t \t [id: 9.1~9.2]",
 			"8. Τσάμικο Ηπείρου (10.1~10.2)",
 			"9. Ρυθμός 6 χρόνων (11.1~11.2)",
 			"10. Ζαγορίσιο (12.1~12.3)",
