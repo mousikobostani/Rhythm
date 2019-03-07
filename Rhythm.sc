@@ -639,7 +639,7 @@ Rhythm {
 			~bpm = ~ratio[2]*bpm;
 			~durPPatt.source = Pseq(Array.fill(20,1), inf)/~bpm;			
 			~bufnumPPatt.source = Pseq([~dum, 0, ~te, ~te, ~te, 0, ~te, 0, ~te, ~te, ~dum, ~te, ~dum, 0, ~te, 0, 0, 0, ~te, ~te], inf);
-			~ampPPatt.source =    Pseq([1,    0,   1,   1,   1, 0,   1, 0,   1,   1,    1,   1,    1, 0,   1, 0, 0, 0,   1,   1], inf);
+			~ampPPatt.source =    Pseq([   1, 0,   1,   1,   1, 0,   1, 0,   1,   1,    1,   1,    1, 0,   1, 0, 0, 0,   1,   1], inf);
 		}		
 
 

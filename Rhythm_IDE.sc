@@ -38,12 +38,14 @@ Rhythm_IDE {
 			{ Rhythm.mute; }
 		)};
 		
-		but02 = Button(w, Rect(680,61,100,48)).states_([
-			["Start again",Color.white,Color.black]
-		]);
-		but02.action = {
-			{ Rhythm.mute; }
+		but02 = Button(w, Rect(680,61,100,48))
+        .states_([
+            ["Start again", Color.black, Color.red]
+        ]);
+		but02.action = { 
+			Rhythm.reset; 
 		};
+
 
 /*		but02 = Button(w, Rect(490,61,160,48)).states_([
 			["Ντέφι",Color.white,Color.black],
@@ -105,10 +107,10 @@ Rhythm_IDE {
 				10, {~rhythmID = 13;   Rhythm.play(~rhythmID,b1.value); b2.value = 13;   but01.value=1;},
 				11, {~rhythmID = 15.1; Rhythm.play(~rhythmID,b1.value); b2.value = 15.1; but01.value=1;},
 				12, {~rhythmID = 16;   Rhythm.play(~rhythmID,b1.value); b2.value = 16;   but01.value=1;},
-				13, {~rhythmID = 19;   Rhythm.play(~rhythmID,60);       b2.value = 19;   but01.value=1;b1.value=60},
+				13, {~rhythmID = 19;   Rhythm.play(~rhythmID,b1.value); b2.value = 19;   but01.value=1;},
 				14, {~rhythmID = 28.1; Rhythm.play(~rhythmID,b1.value); b2.value = 28.1; but01.value=1;},
 				15, {~rhythmID = 31;   Rhythm.play(~rhythmID,b1.value); b2.value = 31;   but01.value=1;},
-				16, {~rhythmID = 32.2; Rhythm.play(~rhythmID,90);       b2.value = 32.2; but01.value=1;b1.value=90},
+				16, {~rhythmID = 32.2; Rhythm.play(~rhythmID,b1.value); b2.value = 32.2; but01.value=1;},
 				17, {~rhythmID = 35;   Rhythm.play(~rhythmID,b1.value); b2.value = 35;   but01.value=1;},
 				18, {~rhythmID = 39.1; Rhythm.play(~rhythmID,b1.value); b2.value = 39.1; but01.value=1;},
 				19, {~rhythmID = 40;   Rhythm.play(~rhythmID,b1.value); b2.value = 40;   but01.value=1;},
@@ -123,9 +125,8 @@ Rhythm_IDE {
 				28, {~rhythmID = 59.1; Rhythm.play(~rhythmID,b1.value); b2.value = 59.1; but01.value=1;},
 				29, {~rhythmID = 63;   Rhythm.play(~rhythmID,b1.value); b2.value = 63;   but01.value=1;},
 				30, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},
-				31, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},
-				32, {~rhythmID = 70;   Rhythm.play(~rhythmID,b1.value); b2.value = 70;   but01.value=1;},			
-				33, {~rhythmID = 100;   Rhythm.play(~rhythmID,100);       b2.value = 100;   but01.value=1;}
+				31, {~rhythmID = 73;   Rhythm.play(~rhythmID,b1.value); b2.value = 73;  but01.value=1;},
+				32, {~rhythmID = 100;  Rhythm.play(~rhythmID,b1.value); b2.value = 100;  but01.value=1;}
 			)
 		});
 		w.front;
